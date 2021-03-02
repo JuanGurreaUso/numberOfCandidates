@@ -10,7 +10,7 @@ public class MainClass {
             candidates.readAndStoreFile(new File("Colfuturo-Seleccionados.csv"));
             candidates.removeDuplicates();
             candidates.countCandidates();
-            candidates.pairInHashMap();
+            candidates.pairAndSortInList();
             candidates.printResults();
 
         } catch (IOException e) {

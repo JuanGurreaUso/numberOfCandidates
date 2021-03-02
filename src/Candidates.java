@@ -8,17 +8,17 @@ public class Candidates {
 
     private File file;
     private Map<String, String> map;
-    private Map<String, Integer> resultMap;
     private Set<String> keySet;
     private List<String> keyList;
     private List<Integer> valueList;
+    private List<PairCandidates> pairCandidates;
 
     public Candidates() {
         map = new HashMap<>();
-        resultMap = new HashMap<>();
         keySet = new HashSet<>();
         keyList = new ArrayList<>();
         valueList = new ArrayList<>();
+        pairCandidates = new ArrayList<>();
     }
 
     public void readAndStoreFile(File file) throws IOException {
@@ -48,10 +48,8 @@ public class Candidates {
     }
 
     public void removeDuplicates() {
-        for(Map.Entry<String, String> value: map.entrySet()) {
-            keySet.add(value.getValue());
-        }
 
+        keySet.addAll(map.values());
         keyList.addAll(keySet);
         Collections.sort(keyList);
     }
@@ -59,37 +57,24 @@ public class Candidates {
     public void countCandidates() {
         int count;
 
+        // WOW, discovered frequency method, it's crazy!
         for (String key: keyList) {
-            count = 0;
-            for (Map.Entry<String, String> value : map.entrySet()) {
-                if (key.equals(value.getValue())) {
-                    count++;
-                }
-            }
+            count = Collections.frequency(map.values(), key);
             valueList.add(count);
         }
     }
 
-    public void pairInHashMap() {
+    public void pairAndSortInList() {
+        pairCandidates = new ArrayList<>();
         for (int i = 0; i < keyList.size(); i++) {
-            resultMap.put(keyList.get(i), valueList.get(i));
+            pairCandidates.add(new PairCandidates(keyList.get(i), valueList.get(i)));
         }
-        Collections.sort(valueList);
+        Collections.sort(pairCandidates);
     }
 
-    // I made this program thinking only in sorting by numbers (like the exercise says),
-    // and not in sorting alphabetically too when it has repeated numbers
     public void printResults() {
-        List<String> temp = new ArrayList<>(keyList);
-
-        System.out.println("Candidates list by countries, sorted by number: \n");
-        for (Integer value: valueList) {
-            for (Map.Entry<String, Integer> values : resultMap.entrySet()) {
-                if (value.equals(values.getValue()) && temp.contains(values.getKey())) {
-                    System.out.println(values.getValue() + " candidates for " + values.getKey());
-                    temp.remove(values.getKey());
-                }
-            }
+        for (PairCandidates value: pairCandidates) {
+            System.out.println(value);
         }
     }
 }
